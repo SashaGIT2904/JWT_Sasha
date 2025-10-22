@@ -3,7 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
@@ -95,6 +95,8 @@ def login():
 @app.route('/private', methods=['GET'])
 @jwt_required()
 def privado():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
     return jsonify({"msg": "This is a private route"}), 200
 
     # Here you would typically verify the email and password with the database
@@ -105,3 +107,6 @@ def privado():
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
+
+#Crear el Token de registro, cerrar sesión, ruta privada
