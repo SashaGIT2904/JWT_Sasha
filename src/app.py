@@ -13,6 +13,7 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 # from models import Person
 
@@ -20,10 +21,16 @@ ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
+
+CORS(app,
+     resources={r"/api/*": {"origins": "*"}},
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     allow_headers=["Content-Type", "Authorization"],
+     supports_credentials=True)
+
 jwt = JWTManager(app)
 bcrypt = Bcrypt(app)
 app.url_map.strict_slashes = False
-
 app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET')
 
 # database condiguration
@@ -106,6 +113,8 @@ def privado():
 @app.route('/api/register', methods=['POST'])
 def register():
     body = request.get_json()
+    if body is None:
+        return jsonify({"msg": "Missing JSON in request"}), 400
     user = User()
     user.email = body['email']
     hash_password = bcrypt.generate_password_hash(
