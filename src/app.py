@@ -107,8 +107,6 @@ def privado():
     user = User.query.filter_by(email=current_user).first()
     return jsonify({"msg": "This is a private route"}), 200
 
-# Crear el Token de registro, cerrar sesión(limpiar el local storage), ruta privada
-
 #REGISTER (funciona)
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -125,12 +123,10 @@ def register():
     db.session.commit()
     return jsonify({"msg": "User created"}), 200
 
-
+#LOGOUT (funciona)
 @app.route('/api/logout', methods=['POST'])
 def logout():
     return jsonify({"msg": "Logout successful"}), 200
-
-# Bcrypt
 
 
 # this only runs if `$ python src/main.py` is executed

@@ -7,11 +7,13 @@ import Login from "./pages/Login";
 import Private from "./pages/Private";
 
 
+//Outlet sirve para renderizar las rutas anidadas
 function PrivateRoute() {
   const token = sessionStorage.getItem("token");
   return token ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
+//Todas las rutas se renderizan en el Layout, excepto las privadas
 export default function AppRoutes() {
   return (
     <BrowserRouter>
